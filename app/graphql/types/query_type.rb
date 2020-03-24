@@ -8,7 +8,7 @@ module Types
           description: 'Returns a list of items in the martian library'
 
     def items
-      Item.all
+      Item.lazy_preload(:user)
     end
   end
 end
