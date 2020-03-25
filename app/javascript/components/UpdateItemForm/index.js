@@ -11,7 +11,7 @@ const UpdateItemForm = ({
   initialImageUrl,
   onClose
 }) => {
-  const [updateItem, { loading }] = useMutation(UpdateItemMutation);
+  const [updateItem, { loading, data }] = useMutation(UpdateItemMutation);
   
   return (
     <div className={cs.overlay}>
@@ -22,27 +22,17 @@ const UpdateItemForm = ({
           initialDescription={initialDescription}
           buttonText="Update Item"
           loading={loading}
-          onProcessItem={(item = { title, description, imageUrl }) => {
+          errors={data && data.updateItem.errors} 
+          onProcessItem={(attributes = { title, description, imageUrl }) => {
             updateItem({
               variables: {
                 input: {
                   id,
-                  ...item
-                }
-              },
-              optimisticResponse: {
-                __typename: "Mutation",
-                updateItem: {
-                  __typename: "UpdateItemPayload",
-                  item: {
-                    id,
-                    __typename: "Item",
-                    ...item
-                  }
+                  attributes
                 }
               }
-            });
-            onClose();
+            }).then(({data}) => { !data.updateItem.errors && onClose() });
+            
           }}
         />
         <button className={cs.close} onClick={onClose}>

@@ -6,7 +6,7 @@ import ProcessItemForm from "../ProcessItemForm";
 import cs from './styles';
 
 const AddItemForm = () => {
-  const [addItem, { loading }] = useMutation(
+  const [addItem, { loading, data }] = useMutation(
     AddItemMutation,
     {
       update(cache, { data: { addItem } }) {
@@ -27,10 +27,11 @@ const AddItemForm = () => {
     <ProcessItemForm
       buttonText="Add Item"
       loading={loading}
-      onProcessItem={(input = { title, description, imageUrl }) => 
+      errors={data && data.addItem.errors} 
+      onProcessItem={(attributes = { title, description, imageUrl }) => 
         addItem({
           variables: {
-            input
+            input: { attributes }
           }
         })
       }

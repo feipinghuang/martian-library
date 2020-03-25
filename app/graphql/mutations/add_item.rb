@@ -1,24 +1,22 @@
+# frozen_string_literal: true
+
 module Mutations
   class AddItem < BaseMutation
     field :item, Types::ItemType, null: true
-    field :errors, [String], null: false
+    field :errors, Types::ValidationErrorsType, null: true
 
-    argument :title, String, required: true
-    argument :description, String, required: false
-    argument :image_url, String, required: false
+    argument :attributes, Types::ItemAttributes, required: true
 
-    def resolve(title:, description: nil, image_url: nil)
-      item = Item.new(
-        title: title,
-        description: description,
-        image_url: image_url,
-        user: context[:current_user]
-      )
+    def resolve(attributes:)
+      check_authentication!
+
+      item = Item.new(attributes.to_h.merge(user: context[:current_user]))
 
       if item.save
+        MartianLibrarySchema.subscriptions.trigger("itemAdded", {}, item)
         { item: item }
       else
-        { errors: item.errors.full_messages }
+        { errors: item.errors }
       end
     end
   end

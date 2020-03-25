@@ -7,7 +7,7 @@ const UserInfo = () => {
   const { loading, data } = useQuery(Me);
   
   const input = useRef(null)
-  const [signIn, { loading: authenticating }] = useMutation(
+  const [signIn, { loading: authenticating, error}] = useMutation(
     SignMeIn,
     {
       onCompleted({ signIn: { token } }) {
@@ -47,6 +47,7 @@ const UserInfo = () => {
                     className={cs.button}
                     value="Sign In"
                   />
+                  {error && <span>{error.message}</span>}
                 </form>
               </div>)
             : (<div className={cs.info}>😈 {data.me.fullName}</div>)

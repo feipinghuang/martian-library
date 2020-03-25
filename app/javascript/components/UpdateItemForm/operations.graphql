@@ -1,10 +1,12 @@
+#import '../../fragments/Item.graphql'
+
 mutation UpdateItemMutation($input: UpdateItemInput!) {
   updateItem(input: $input) {
     item {
-      id
-      title
-      description
-      imageUrl
+      ...ItemFragment
+    }
+    errors {
+      fullMessages
     }
   }
 }
