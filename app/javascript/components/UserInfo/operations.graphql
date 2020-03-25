@@ -1,0 +1,16 @@
+query Me {
+  me {
+    id
+    fullName
+  }
+}
+
+mutation SignMeIn($input: SignInInput!) {
+  signIn(input: $input) {
+    token
+    user {
+      id
+      fullName
+    }
+  }
+}

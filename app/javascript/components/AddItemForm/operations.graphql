@@ -1,0 +1,14 @@
+mutation AddItemMutation($input: AddItemInput!) {
+  addItem(input: $input) {
+    item {
+      id
+      title
+      description
+      imageUrl
+      user {
+        id
+        email
+      }
+    }
+  }
+}
